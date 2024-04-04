@@ -7,7 +7,7 @@ jobs:
   build:
     name: Build Web
     env:
-      my_secret: $
+      my_secret: ${{secrets.commit_secret}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -29,8 +29,8 @@ jobs:
           git config --global user.email jubal2000@gmail.com
           git config --global user.name jubal2000
           git status
-          git branch -M main
-          git remote add origin https://github.com/jubal2000/Battle-bro-web-00.git 
-          git add .
+          git remote add origin https://${{secrets.commit_secret}}@github.com/jubal2000/Battle-bro-00.git 
+          git checkout -b web-page
+          git add --all
           git commit -m "update"
-          git push -u origin main 
+          git push origin web-page -f
