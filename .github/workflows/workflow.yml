@@ -11,12 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Setup SDKs
+      - name: Setup Flutter
         uses: flutter-actions/setup-flutter@v2
         with:
           channel: stable
           version: 3.19.3
-      - uses: dart-lang/setup-dart@v1
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
         with:
           sdk: 3.3.1
       - run: flutter config --enable-web
