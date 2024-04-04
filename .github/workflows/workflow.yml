@@ -12,9 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Setup SDKs
-        uses: flutter-actions/setup-flutter@v2
+      - uses: subosito/flutter-action@v1
         with:
-          channel: stable
           flutter-version: 3.3.1
           dart-version: 2.18.0
       - run: flutter config --enable-web
