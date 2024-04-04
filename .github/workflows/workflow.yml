@@ -15,11 +15,10 @@ jobs:
         uses: flutter-actions/setup-flutter@v2
         with:
           channel: stable
-          flutter-version: 3.19.3
+          version: 3.19.3
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: 3.3.1
-
       - run: flutter config --enable-web
       - run: flutter pub get
       - run: flutter build web --release
