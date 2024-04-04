@@ -48,6 +48,10 @@ class StatProvider extends ChangeNotifier {
     initStat(0);
   }
 
+  get isMaxLevel {
+    return currentLevel >= levelMax;
+  }
+
   setResultType(int value) {
     resultType = value;
     notifyListeners();

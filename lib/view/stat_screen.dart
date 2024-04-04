@@ -31,6 +31,7 @@ class _StatScreenState extends ConsumerState<StatScreen> {
   @override
   Widget build(BuildContext context) {
     final statProv = ref.watch(statProvider);
+    final maxWidth = MediaQuery.of(context).size.width > 400.0 ? 400.0 : MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -38,20 +39,26 @@ class _StatScreenState extends ConsumerState<StatScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildLevelBox(),
-              _buildMinMaxBox(),
-              GridView.count(
-                shrinkWrap: true,
-                crossAxisCount: 2,
-                childAspectRatio: 1.6,
-                children: List<Widget>.of(statProv.statInfo.map((e) => _buildStatItem(e))),
-              ),
-              _buildButtonBox()
-            ],
+          alignment: Alignment.center,
+          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: Container(
+            constraints: BoxConstraints(
+              maxWidth: maxWidth,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildLevelBox(),
+                _buildMinMaxBox(),
+                GridView.count(
+                  shrinkWrap: true,
+                  crossAxisCount: 2,
+                  childAspectRatio: 1.8,
+                  children: List<Widget>.of(statProv.statInfo.map((e) => _buildStatItem(e))),
+                ),
+                _buildButtonBox()
+              ],
+            ),
           ),
         ),
       ),
@@ -62,7 +69,7 @@ class _StatScreenState extends ConsumerState<StatScreen> {
     final statProv = ref.read(statProvider);
     return Container(
       margin: EdgeInsets.all(5),
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+      padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         border: Border.all(width: 1)
@@ -90,10 +97,13 @@ class _StatScreenState extends ConsumerState<StatScreen> {
             child: Icon(Icons.add),
           ),
           SizedBox(width: 5),
-          InkButton(
-            onTap: () => statProv.maxLevel,
-            contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-            child: Text('Max', style: text14bold),
+          Expanded(child:
+            InkButton(
+              onTap: () => statProv.maxLevel,
+              contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+              bgColor: statProv.isMaxLevel ? null : GRAY_5,
+              child: Text('Max', style: text14bold),
+            ),
           ),
         ],
       )
@@ -104,7 +114,7 @@ class _StatScreenState extends ConsumerState<StatScreen> {
     final statProv = ref.read(statProvider);
     return Container(
       margin: EdgeInsets.all(5),
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+      padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(width: 1)
@@ -164,7 +174,6 @@ class _StatScreenState extends ConsumerState<StatScreen> {
         color: Colors.white
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
@@ -181,13 +190,15 @@ class _StatScreenState extends ConsumerState<StatScreen> {
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildStatValue(stat.type, statMinTextController[stat.type.index], true),
-              Icon(Icons.arrow_forward_ios, size: 14),
-              _buildStatValue(stat.type, statNowTextController[stat.type.index]),
-            ],
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildStatValue(stat.type, statMinTextController[stat.type.index], true),
+                Icon(Icons.arrow_forward_ios, size: 14),
+                _buildStatValue(stat.type, statNowTextController[stat.type.index]),
+              ],
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(left: 5),
@@ -215,47 +226,50 @@ class _StatScreenState extends ConsumerState<StatScreen> {
   }
 
   _buildStatValue(stat, controller, [bool isCanEdit = false]) {
-    return Expanded(child: Container(
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-      alignment: Alignment.center,
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          isDense: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+        alignment: Alignment.center,
+        child: TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            isDense: true,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            filled: true,
+            fillColor: isCanEdit ? Colors.white : GRAY_10,
+            contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+            floatingLabelBehavior: FloatingLabelBehavior.never,
           ),
-          filled: true,
-          fillColor: isCanEdit ? Colors.white : GRAY_10,
-          contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-          floatingLabelBehavior: FloatingLabelBehavior.never,
+          cursorHeight: 15,
+          style: text18bold,
+          readOnly: !isCanEdit,
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          keyboardType: TextInputType.number,
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+          ],
+          onTap: () {
+            if (!isCanEdit) return;
+            controller.clear();
+          },
+          onChanged: (value) {
+            try {
+              ref.read(statProvider).setStatValue(stat, int.parse(value));
+            } catch (e) {
+              LOG('--> value error : $e');
+            }
+          },
         ),
-        style: text18bold,
-        readOnly: !isCanEdit,
-        textAlign: TextAlign.center,
-        maxLines: 1,
-        keyboardType: TextInputType.number,
-        inputFormatters: <TextInputFormatter>[
-          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-        ],
-        onTap: () {
-          controller.clear();
-        },
-        onChanged: (value) {
-          try {
-            ref.read(statProvider).setStatValue(stat, int.parse(value));
-          } catch (e) {
-            LOG('--> value error : $e');
-          }
-        },
-      ),
     ));
   }
 
 
   _buildButtonBox() {
     return Container(
-      margin: EdgeInsets.only(top: 10),
+      margin: EdgeInsets.only(top: 10, left: 5),
       child: Row(
         children: [
           InkButton(
@@ -263,7 +277,7 @@ class _StatScreenState extends ConsumerState<StatScreen> {
               ref.read(statProvider).clear;
             },
             child: Container(
-              width: 80,
+              width: 100,
               height: 40,
               padding:  EdgeInsets.symmetric(horizontal: 14),
               alignment: Alignment.center,
