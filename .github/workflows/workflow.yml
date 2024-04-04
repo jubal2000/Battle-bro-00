@@ -30,6 +30,7 @@ jobs:
           git config --global user.name jubal2000
           git status
           git remote add origin https://$@github.com/jubal2000/Battle-bro-00.git 
+          git checkout -b web-pages
           git add --all
-          git commit -m "web update"
-          git push 
+          git commit -m "update"
+          git push origin web-pages -f
