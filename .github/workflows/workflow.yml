@@ -1,4 +1,4 @@
-name: Battle bro web
+name: Battle bro
 on:
   push:
     branches:
