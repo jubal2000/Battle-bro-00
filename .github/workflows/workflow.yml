@@ -1,4 +1,4 @@
-name: Flutter Web
+name: Battle bro info
 on:
   push:
     branches:
@@ -18,10 +18,10 @@ jobs:
       - run: flutter pub get
       - run: flutter build web --release
         # 1. change path which exist lib/main.dart
-        working-directory: ./battle_bro_00
+        working-directory: ./Battle-bro-00
       - run: |
           # 2. change path to [existed lib/main.dart path]/build/web
-          cd battle_bro_00/build/web
+          cd Battle-bro-00/build/web
           git init
            # 3. change your email
           git config --global user.email jubal2000@gmail.com
