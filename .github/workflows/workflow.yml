@@ -31,6 +31,6 @@ jobs:
           git status
           git branch -M main
           git remote add origin https://github.com/jubal2000/Battle-bro-web-00.git 
-          git add --all
+          git add .
           git commit -m "update"
           git push -u origin main 
