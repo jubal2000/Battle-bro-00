@@ -18,15 +18,11 @@ jobs:
       - run: flutter pub get
       - run: flutter build web --release
       - run: |
-          # 2. change path to [existed lib/main.dart path]/build/web
-          cd ./build/web
+          cd build/web
           git init
-           # 3. change your email
           git config --global user.email jubal2000@gmail.com
-          # 4. change your name
           git config --global user.name jubal2000
           git status
-          # 5. change your repository
           git remote add origin https://github.com/jubal2000/Battle-bro-00.git 
           git checkout -b gh-pages
           git add --all
