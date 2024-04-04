@@ -14,8 +14,7 @@ import '../common/utils.dart';
 import 'widget/inkButton.dart';
 
 class StatScreen extends ConsumerStatefulWidget {
-  const StatScreen({super.key, required this.title});
-
+  const StatScreen({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override

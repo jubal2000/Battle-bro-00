@@ -8,7 +8,7 @@ import 'stat_screen.dart';
 import 'widget/inkButton.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
-  const MainScreen({super.key});
+  const MainScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState createState() => _MainScreenState();
